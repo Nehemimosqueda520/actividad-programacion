@@ -1,4 +1,4 @@
-# README - Juego de Aleyyway
+# README - Juego de la pelota - made by DAN
 
 Este es un juego de tipo Aleyyway implementado en Phaser, un framework de juegos en JavaScript. El objetivo del juego es mover una pelota con una pala y rebotar la pelota en las paredes mientras se acumulan puntos. A medida que el jugador avanza en los niveles, la velocidad de la pelota aumenta, se agregan obstáculos aleatorios y el color de fondo cambia para ofrecer una experiencia desafiante y visualmente atractiva.
 
