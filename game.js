@@ -19,14 +19,17 @@ export class Game extends Phaser.Scene {
         this.physics.world.setBoundsCollision (true, true, true, false);
         this.platform =this.physics.add.sprite (400, 500, "platform").setImmovable();
         this.platform.body.allowGravity = false;
+        this.platform.setCollideWorldBounds(true);
 
         this.ball =  this.physics.add.sprite (400, 0, "ball");
         this.ball.setBounce(1);
         this.ball.setCollideWorldBounds(true);
         this.ballVelocity = 200;
-        this.ball.setVelocity(this.ballVelocity, this.ballVelocity)
+        this.ball.setVelocity(this.ballVelocity, this.ballVelocity);
 
         this.obstacle = this.physics.add.staticGroup ();
+
+        this.platformVelocity = 400
 
         //collider between ball and platform
         this.physics.add.collider(
@@ -52,6 +55,23 @@ export class Game extends Phaser.Scene {
     bounce (ball, platform) {
     this.score += 1;
     this.scoreText.setText ("score: " + this.score);
+
+}
+
+generateRandomDarkColor() {
+    const minSaturation = 0.5; // Saturación mínima
+    const maxSaturation = 1; // Saturación máxima
+    const minBrightness = 0.1; // Brillo mínimo
+    const maxBrightness = 0.5; // Brillo máximo
+    
+    // Generar un color aleatorio en formato HSV
+    const randomColor = Phaser.Display.Color.HSVToRGB(
+        Math.random(), // Tono (Hue)
+        Phaser.Math.FloatBetween(minSaturation, maxSaturation), // Saturación
+        Phaser.Math.FloatBetween(minBrightness, maxBrightness) // Brillo
+    );
+
+    return randomColor.color;
 }
 
 nextLevel() {
@@ -71,10 +91,18 @@ nextLevel() {
     let randomObstacley = Phaser.Math.Between(10, 300);
     let randomObstacleScale = Phaser.Math.Between(1, 3);
 
-    ;
+    this.platformVelocity += 20;
+
     this.obstacle.create(randomObstaclex, randomObstacley, "obstacle").setScale(randomObstacleScale).refreshBody();
 
-    if (this.level === 20) {
+    // Generar un color aleatorio oscuro
+    const randomDarkColor = this.generateRandomDarkColor();
+
+    // Cambiar el color de fondo de la escena
+    this.cameras.main.setBackgroundColor(randomDarkColor);
+
+
+    if (this.level >= 20) {
         this.showWinMessage();
     }
 }
@@ -102,10 +130,10 @@ showLoseMessage () {
 
     update () {
         if (this.cursors.left.isDown) {
-            this.platform.setVelocityX(-400);
+            this.platform.setVelocityX(-this.platformVelocity);
         }
         else if (this.cursors.right.isDown) {
-            this.platform.setVelocityX(400);
+            this.platform.setVelocityX(this.platformVelocity);
         } else {
             this.platform.setVelocityX(0);
         }
